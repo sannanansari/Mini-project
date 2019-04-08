@@ -30,10 +30,10 @@ class SentimentAnalysis:
         self.p,self.neg,self.neu,self.search=0,0,0,0
         self.term = ''
     def DownloadData(self):
-        consumerKey = ""
-        consumerSecret = ""
-        accessToken = ""
-        accessTokenSecret = ""
+        consumerKey = "4BoXuUpKJYkCfFSz5MHZWL0On"
+        consumerSecret = "O5sINgD8ROtbVqOfnyTyU9dRJE7HGy4BEVfkCYbP2jVCJJm5h3"
+        accessToken = "3195400891-Y48zxtd9ImIqub8MOGCHBPQpjGDBkguNS2nZuYJ"
+        accessTokenSecret = "HmCCiUNmBMtsoovRMQQgF1jW42Y7cPiMzqoeZM0KwpgmV"
         auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
         auth.set_access_token(accessToken, accessTokenSecret)
         api = tweepy.API(auth)
@@ -41,7 +41,7 @@ class SentimentAnalysis:
         searchTerm = v.get()
         NoOfTerms = 100
 
-        self.tweets = tweepy.Cursor(api.search, q=searchTerm, lang = "en").items(NoOfTerms)
+        self.tweets = tweepy.Cursor(api.search, q=searchTerm, lang = "en",query="INDIA", granularity="country").items(NoOfTerms)
 
         csvFile = open('result.csv', 'a')
 
@@ -130,8 +130,6 @@ label = Label(gui,text='Enter the input Here',fg='#38A1F3',bg='#38A1F3').pack()
 
 #button
 def newframe():
-    frame = Toplevel(gui)
-    label = Label(frame,text=v.get()).pack()
     sa = SentimentAnalysis()
     positive, negative, neutral, searchTerm, noOfSearchTerms=sa.DownloadData()
     def plotPieChart(positive, negative, neutral, searchTerm, noOfSearchTerms):
@@ -153,9 +151,7 @@ def newframe():
         window.mainloop()
         
     plotPieChart(positive, negative, neutral, searchTerm, noOfSearchTerms)
-    button = Button(frame,text='click here to quit',command=frame.destroy).pack()
     
 button = Button(gui,text='Calculate sentiment',command=newframe).pack()
 
 gui.mainloop()
-print(x)
