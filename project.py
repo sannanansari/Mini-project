@@ -1,19 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Apr  7 21:56:49 2019
-
-@author: Ansari
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Aug 15 18:09:14 2018
-@author: Ansari
-"""
-# -*- coding: utf-8 -*-
-"""
 Created on Thu Apr  4 22:48:37 2019
-
 @author: Ansari
 """
 
@@ -21,7 +8,6 @@ Created on Thu Apr  4 22:48:37 2019
 import sys,tweepy,csv,re
 from textblob import TextBlob
 import matplotlib.pyplot as plt
-
 class SentimentAnalysis:
 
     def __init__(self):
@@ -30,10 +16,10 @@ class SentimentAnalysis:
         self.p,self.neg,self.neu,self.search=0,0,0,0
         self.term = ''
     def DownloadData(self):
-        consumerKey = "4BoXuUpKJYkCfFSz5MHZWL0On"
-        consumerSecret = "O5sINgD8ROtbVqOfnyTyU9dRJE7HGy4BEVfkCYbP2jVCJJm5h3"
-        accessToken = "3195400891-Y48zxtd9ImIqub8MOGCHBPQpjGDBkguNS2nZuYJ"
-        accessTokenSecret = "HmCCiUNmBMtsoovRMQQgF1jW42Y7cPiMzqoeZM0KwpgmV"
+        consumerKey = ""
+        consumerSecret = ""
+        accessToken = ""
+        accessTokenSecret = ""
         auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
         auth.set_access_token(accessToken, accessTokenSecret)
         api = tweepy.API(auth)
@@ -41,7 +27,7 @@ class SentimentAnalysis:
         searchTerm = v.get()
         NoOfTerms = 100
 
-        self.tweets = tweepy.Cursor(api.search, q=searchTerm, lang = "en",query="INDIA", granularity="country").items(NoOfTerms)
+        self.tweets = tweepy.Cursor(api.search, q=searchTerm, lang = "en",query=u.get(),granularity='country').items(NoOfTerms)
 
         csvFile = open('result.csv', 'a')
 
@@ -126,7 +112,10 @@ label = Label(gui,text='Enter the input Here',fg='#38A1F3',bg='#38A1F3').pack()
 #Input
 v = StringVar()
 entry = Entry(gui,bd=3,width=45,textvariable=v).pack()
-label = Label(gui,text='Enter the input Here',fg='#38A1F3',bg='#38A1F3').pack()
+label = Label(gui,text='Enter the country Here',fg='#38A1F3',bg='#38A1F3').pack()
+u = StringVar()
+entry = Entry(gui,bd=3,width=45,textvariable=u).pack()
+label = Label(gui,text='Enter the search Here',fg='#38A1F3',bg='#38A1F3').pack()
 
 #button
 def newframe():
@@ -141,16 +130,20 @@ def newframe():
         fig = matplotlib.figure.Figure(figsize=(5,5))
         ax = fig.add_subplot(111)
         ax.pie(sizes) 
-        ax.legend(colors)
+        ax.legend(['Positive [' + str(positive) + '%]', 'Neutral [' + str(neutral) + '%]','Negative [' + str(negative) + '%]'])
         circle=matplotlib.patches.Circle( (0,0), 0.7, color='white')
         ax.add_artist(circle)
         window= tk.Tk()
+        label = Label(window,text='search='+v.get(),bg='white').pack()
+        label = Label(window,text='country='+u.get(),bg='white').pack()
+        label = Label(window,text='Analysis',fg='white').pack()
         canvas = FigureCanvasTkAgg(fig, master=window)
         canvas.get_tk_widget().pack()
         canvas.draw()
         window.mainloop()
         
     plotPieChart(positive, negative, neutral, searchTerm, noOfSearchTerms)
+    button = Button(newframe,text='click here to quit',command=newframe.destroy).pack()
     
 button = Button(gui,text='Calculate sentiment',command=newframe).pack()
 
